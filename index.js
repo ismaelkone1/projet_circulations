@@ -1,23 +1,23 @@
 async function getGeolocation(ip) {
-  const url = `https://ipapi.co/${ip}/xml`;
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/xml",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+    const url = `https://ipapi.co/${ip}/xml`;
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/xml",
+            },
+        });
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        const xmlText = await response.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+        return xmlDoc;
+    } catch (error) {
+        console.error("Fetch error:", error);
+        return false;
     }
-    const xmlText = await response.text();
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlText, "application/xml");
-    return xmlDoc;
-  } catch (error) {
-    console.error("Fetch error:", error);
-    return false;
-  }
 }
 
 async function getDonneesMeteo(lat, lon) {
@@ -77,14 +77,14 @@ async function getInfoVelo() {
 }
 
 async function fetchUserIP() {
-  try {
-    const response = await fetch("https://api64.ipify.org?format=json");
-    const data = await response.json();
-    return data.ip;
-  } catch (error) {
-    console.error("IP fetch error:", error);
-    return null;
-  }
+    try {
+        const response = await fetch("https://api64.ipify.org?format=json");
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.error("IP fetch error:", error);
+        return null;
+    }
 }
 
 async function initialize() {
@@ -98,7 +98,7 @@ async function initialize() {
             const latitude = parseFloat(geoData.querySelector("latitude")?.textContent) || 0;
             const longitude = parseFloat(geoData.querySelector("longitude")?.textContent) || 0;
 
-      document.getElementById("geo-status").innerHTML = `
+            document.getElementById("geo-status").innerHTML = `
                 <strong>Ville :</strong> ${city}<br>
                 <strong>Région :</strong> ${region}<br>
                 <strong>Pays :</strong> ${country}<br>
@@ -106,12 +106,17 @@ async function initialize() {
                 <strong>Longitude :</strong> ${longitude}
             `;
 
-            // Affiche la carte Leaflet
+            // Initialisation de la carte Leaflet
             const map = L.map('map').setView([latitude, longitude], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            L.marker([latitude, longitude]).addTo(map).bindPopup("Votre position").openPopup();
 
-            // Ajout des stations de vélos
+            // Marqueur pour la position de l'utilisateur
+            L.marker([latitude, longitude])
+                .addTo(map)
+                .bindPopup("Votre position")
+                .openPopup();
+
+            // Récupération et affichage des stations de vélos
             const stations = await getInfoVelo();
             stations.forEach(station => {
                 const marker = L.marker([station.lat, station.lon]).addTo(map);
@@ -122,7 +127,7 @@ async function initialize() {
                 `);
             });
 
-            // Appel des données météo
+            // Récupération et affichage des données météo
             const meteoData = await getDonneesMeteo(latitude, longitude);
             if (meteoData) {
                 document.getElementById("weather-status").innerHTML = `
