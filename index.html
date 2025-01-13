@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Décision Mobilité - Nancy</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <script defer src="index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Décision Mobilité - Nancy</h1>
+        <p>Géolocalisation, météo, Covid, qualité de l'air et disponibilité des vélos</p>
+    </header>
+    <main>
+        <section id="map-section">
+            <h2>Carte</h2>
+            <div id="map" style="height: 400px;"></div>
+        </section>
+        <section id="info-section">
+            <h2>Informations</h2>
+            <div id="geolocation-info">
+                <h3>Votre géolocalisation</h3>
+                <p id="geo-status">Chargement de votre position...</p>
+            </div>
+            <div id="covid-info">
+                <h3>État du Covid</h3>
+                <canvas id="covid-chart"></canvas>
+            </div>
+            <div id="air-quality-info">
+                <h3>Qualité de l'air</h3>
+                <p id="air-quality-status">Chargement...</p>
+            </div>
+            <div id="weather-info">
+                <h3>Météo</h3>
+                <p id="weather-status">Chargement...</p>
+            </div>
+        </section>
+        <section id="api-links">
+            <h2>Liens des API utilisées</h2>
+            <ul>
+                <li><a href="https://www.data.gouv.fr/fr/datasets/donnees-hospitalieres-relatives-a-lepidemie-de-covid-19/#_">API Covid</a></li>
+                <li><a href="https://carto.g-ny.org/data/cifs/cifs_waze_v2.json">API Trafic Nancy</a></li>
+                <li><a href="https://api.openweathermap.org/">API Météo</a></li>
+                <li><a href="https://api.waqi.info/">API Qualité de l'air</a></li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Décision Mobilité - Nancy</p>
+    </footer>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</body>
+</html>
