@@ -74,6 +74,38 @@ async function getInfoVelo() {
     }
 }
 
+async function getAirQuality(lat, lon) {
+    try {
+        const response = await fetch(`http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=5a0007c057316c5c6d21be6645534904`);
+        const data = await response.json();
+        const aqiData = data.list[0];
+        const aqi = aqiData.main.aqi;
+        const components = aqiData.components;
+      
+        const aqiText = {
+          1: 'Bon',
+          2: 'Acceptable',
+          3: 'Modéré',
+          4: 'Mauvais',
+          5: 'Très mauvais'
+        };
+      
+        document.getElementById('air-quality-status').innerHTML = `
+          <strong>Qualité de l'air :</strong> ${aqiText[aqi]}<br>
+          <strong>CO :</strong> ${components.co} μg/m³<br>
+          <strong>NO :</strong> ${components.no} μg/m³<br>
+          <strong>NO2 :</strong> ${components.no2} μg/m³<br>
+          <strong>O3 :</strong> ${components.o3} μg/m³<br>
+          <strong>SO2 :</strong> ${components.so2} μg/m³<br>
+          <strong>PM2.5 :</strong> ${components.pm2_5} μg/m³<br>
+          <strong>PM10 :</strong> ${components.pm10} μg/m³<br>
+          <strong>NH3 :</strong> ${components.nh3} μg/m³
+        `;
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données de qualité de l\'air :', error);
+      }
+  }
+
 async function fetchUserIP() {
     try {
         const response = await fetch("https://api64.ipify.org?format=json");
@@ -124,6 +156,8 @@ async function initialize() {
                     <strong>Places libres :</strong> ${station.availableDocks}
                 `);
             });
+
+            await getAirQuality(latitude, longitude);
 
             // Récupération et affichage des données météo
             const meteoData = await getDonneesMeteo(latitude, longitude);
