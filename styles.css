@@ -1,4 +1,3 @@
-/* Styles de base */
 html, body {
     height: 100%;
     margin: 0;
@@ -68,7 +67,6 @@ footer {
     padding: 1em;
 }
 
-/* Media Queries */
 @media (min-width: 600px) {
     main {
         flex-direction: row;
