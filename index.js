@@ -76,7 +76,7 @@ async function getInfoVelo() {
 
 async function getAirQuality(lat, lon) {
     try {
-        const response = await fetch(`http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=5a0007c057316c5c6d21be6645534904`);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=5a0007c057316c5c6d21be6645534904`);
         const data = await response.json();
         const aqiData = data.list[0];
         const aqi = aqiData.main.aqi;
