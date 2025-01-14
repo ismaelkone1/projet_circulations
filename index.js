@@ -117,6 +117,21 @@ async function fetchUserIP() {
     }
 }
 
+async function getCovidData() {
+    const url = `https://tabular-api.data.gouv.fr/api/resources/2963ccb5-344d-4978-bdd3-08aaf9efe514/data/?semaine__sort=desc&page_size=20`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error("Erreur réseau lors de la récupération des données Covid.");
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Erreur lors de la récupération des données Covid :", error);
+        return false;
+    }
+}
+
 async function initialize() {
     const ip = await fetchUserIP();
     if (ip) {
@@ -169,6 +184,47 @@ async function initialize() {
                 `;
             } else {
                 document.getElementById("weather-status").textContent = "Impossible de récupérer les données météo.";
+            }
+
+            // Récupération et affichage des données Covid
+            const covidData = await getCovidData();
+            if (covidData) {
+                const labels = covidData.map(data => data.semaine);
+                //On met en majuscule et on enlève les accents
+                const cases = covidData.map(data => {
+                    //Si la ville est Nancy on donne MAXEVILLE pour avoir les données
+                    if (city.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === "NANCY") {
+                        return data["MAXEVILLE"];
+                    }
+                    return data[city.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")];
+                });
+
+                const ctx = document.getElementById('covid-chart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Ratio SARS-CoV-2 / Azote ammoniacal',
+                            data: cases,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                beginAtZero: true
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            } else {
+                document.getElementById("covid-chart").textContent = "Impossible de récupérer les données Covid.";
             }
         } else {
             document.getElementById("geo-status").textContent = "Impossible de récupérer les données de géolocalisation.";
