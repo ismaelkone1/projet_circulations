@@ -188,6 +188,12 @@ async function initialize() {
 
             // Récupération et affichage des données Covid
             const covidData = await getCovidData();
+            //On trie les données dans l'ordre inverse pour avoir les dernières données en premier
+            covidData.sort((a, b) => {
+                const [yearA, weekA] = a.semaine.split('-S').map(Number);
+                const [yearB, weekB] = b.semaine.split('-S').map(Number);
+                return yearA - yearB || weekA - weekB;
+            });
             if (covidData) {
                 const labels = covidData.map(data => data.semaine);
                 //On met en majuscule et on enlève les accents
