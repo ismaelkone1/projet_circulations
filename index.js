@@ -90,11 +90,11 @@ async function initialize() {
     if (ip) {
         const geoData = await getGeolocation(ip);
         if (geoData) {
-            const city = geoData.querySelector("city")?.textContent || "Ville inconnue";
-            const region = geoData.querySelector("region")?.textContent || "Région inconnue";
-            const country = geoData.querySelector("country_name")?.textContent || "Pays inconnu";
-            const latitude = parseFloat(geoData.querySelector("latitude")?.textContent) || 0;
-            const longitude = parseFloat(geoData.querySelector("longitude")?.textContent) || 0;
+            const city = geoData.city || "Ville inconnue";
+            const region = geoData.region || "Région inconnue";
+            const country = geoData.country_name || "Pays inconnu";
+            const latitude = geoData.latitude || 0;
+            const longitude = geoData.longitude || 0;
 
             document.getElementById("geo-status").innerHTML = `
                 <strong>Ville :</strong> ${city}<br>
