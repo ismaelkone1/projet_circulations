@@ -1,19 +1,17 @@
 async function getGeolocation(ip) {
-    const url = `https://ipapi.co/${ip}/xml`;
+    const url = `https://ipapi.co/${ip}/json/`;
     try {
         const response = await fetch(url, {
             method: "GET",
             headers: {
-                "Content-Type": "application/xml",
+                "Content-Type": "application/json",
             },
         });
         if (!response.ok) {
             throw new Error("Network response was not ok");
         }
-        const xmlText = await response.text();
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, "application/xml");
-        return xmlDoc;
+        const data = await response.json();
+        return data;
     } catch (error) {
         console.error("Fetch error:", error);
         return false;
